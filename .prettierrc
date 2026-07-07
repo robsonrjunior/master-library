@@ -1,0 +1,13 @@
+{
+  "printWidth": 120,
+  "bracketSameLine": true,
+  "htmlWhitespaceSensitivity": "ignore",
+  "overrides": [
+    {
+      "files": "*.xhtml",
+      "options": {
+        "parser": "xml"
+      }
+    }
+  ]
+}
