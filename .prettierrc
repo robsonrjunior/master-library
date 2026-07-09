@@ -1,13 +1,15 @@
 {
-  "printWidth": 120,
-  "bracketSameLine": true,
-  "htmlWhitespaceSensitivity": "ignore",
-  "overrides": [
-    {
-      "files": "*.xhtml",
-      "options": {
-        "parser": "xml"
-      }
-    }
-  ]
+    "printWidth": 120,
+    "bracketSameLine": true,
+    "tabWidth": 4,
+    "htmlWhitespaceSensitivity": "ignore",
+    "plugins": ["prettier-plugin-java"],
+    "overrides": [
+        {
+            "files": "*.xhtml",
+            "options": {
+                "parser": "xml"
+            }
+        }
+    ]
 }

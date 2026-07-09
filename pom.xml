@@ -26,13 +26,14 @@
     </properties>
 
     <dependencies>
+        <!-- Jakarta WEB API -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-web-api</artifactId>
             <version>${jakartaee-api.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Embedded Jakarta EE runtime -->
+        <!-- Payara runtime -->
         <dependency>
             <groupId>fish.payara.extras</groupId>
             <artifactId>payara-micro</artifactId>
@@ -46,23 +47,38 @@
             <version>15.0.0</version>
             <classifier>jakarta</classifier>
         </dependency>
+        <!-- Dotenv -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>3.2.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- MySQL Connector -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>9.3.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <finalName>master-library</finalName>
         <plugins>
+            <!-- Maven Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${compiler-plugin.version}</version>
             </plugin>
+            <!-- Maven WAR -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${war-plugin.version}</version>
             </plugin>
-
-            <!-- Execute 'mvn clean package payara-micro:start' to run the application. -->
+            <!-- Payara start -->
             <plugin>
                 <groupId>fish.payara.maven.plugins</groupId>
                 <artifactId>payara-micro-maven-plugin</artifactId>
@@ -84,6 +100,62 @@
                     <contextRoot>/</contextRoot>
                 </configuration>
             </plugin>
+            <!-- Read properties (.env) -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>${project.basedir}/.env</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Export env vars from .env and validate -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.6.2</version>
+                <executions>
+                    <execution>
+                        <id>validate-dotenv</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>bash</executable>
+                            <arguments>
+                                <argument>-c</argument>
+                                <argument>echo "[.env] MYSQL_HOST=${MYSQL_HOST}
+                                    MYSQL_PORT=${MYSQL_PORT} MYSQL_DATABASE=${MYSQL_DATABASE}"</argument>
+                            </arguments>
+                            <environmentVariables>
+                                <MYSQL_HOST>${MYSQL_HOST}</MYSQL_HOST>
+                                <MYSQL_PORT>${MYSQL_PORT}</MYSQL_PORT>
+                                <MYSQL_DATABASE>${MYSQL_DATABASE}</MYSQL_DATABASE>
+                                <MYSQL_USER>${MYSQL_USER}</MYSQL_USER>
+                                <MYSQL_PASSWORD>${MYSQL_PASSWORD}</MYSQL_PASSWORD>
+                            </environmentVariables>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 </project>
