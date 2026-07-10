@@ -20,6 +20,7 @@
         <maven.compiler.release>21</maven.compiler.release>
         <jakartaee-api.version>11.0.0</jakartaee-api.version>
         <payara.version>7.2026.5</payara.version>
+        <lombok.version>1.18.42</lombok.version>
         <compiler-plugin.version>3.15.0</compiler-plugin.version>
         <war-plugin.version>3.5.1</war-plugin.version>
         <payara-micro-plugin.version>2.5.3</payara-micro-plugin.version>
@@ -61,6 +62,13 @@
             <version>9.3.0</version>
             <scope>compile</scope>
         </dependency>
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -71,6 +79,15 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${compiler-plugin.version}</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
             <!-- Maven WAR -->
             <plugin>
@@ -119,37 +136,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Export env vars from .env and validate -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.6.2</version>
-                <executions>
-                    <execution>
-                        <id>validate-dotenv</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>bash</executable>
-                            <arguments>
-                                <argument>-c</argument>
-                                <argument>echo "[.env] MYSQL_HOST=${MYSQL_HOST}
-                                    MYSQL_PORT=${MYSQL_PORT} MYSQL_DATABASE=${MYSQL_DATABASE}"</argument>
-                            </arguments>
-                            <environmentVariables>
-                                <MYSQL_HOST>${MYSQL_HOST}</MYSQL_HOST>
-                                <MYSQL_PORT>${MYSQL_PORT}</MYSQL_PORT>
-                                <MYSQL_DATABASE>${MYSQL_DATABASE}</MYSQL_DATABASE>
-                                <MYSQL_USER>${MYSQL_USER}</MYSQL_USER>
-                                <MYSQL_PASSWORD>${MYSQL_PASSWORD}</MYSQL_PASSWORD>
-                            </environmentVariables>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
         <resources>
             <resource>

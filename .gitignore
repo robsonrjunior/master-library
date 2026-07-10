@@ -1,4 +1,11 @@
+# Java
 target/
 .mvn/wrapper/maven-wrapper.jar
+
+# Opencode
+openspec/
+!openspec/specs/
+
+# Others
 .env
 node_modules/

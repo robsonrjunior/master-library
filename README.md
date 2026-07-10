@@ -12,6 +12,12 @@ Built with **Jakarta EE 11** on **Payara Micro**, using Java 21.
 - [Maven Wrapper](https://maven.apache.org/wrapper/) (already included — no Maven install needed)
 - [Docker](https://docs.docker.com/get-docker/) *(optional, for container-based run)*
 
+## Development Notes
+
+- Model classes in `src/main/java/com/github/robsonrjunior/master/library/model` should use Lombok annotations for boilerplate (`@Getter`, `@Setter`, etc.) instead of manual accessors.
+- Enable annotation processing in your IDE so Lombok-generated methods are recognized during development.
+- Verify local changes with `./mvnw -q -DskipTests compile`.
+
 > First time only: make the Maven Wrapper executable.
 > ```bash
 > chmod +x mvnw
