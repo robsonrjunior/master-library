@@ -3,7 +3,7 @@
     "bracketSameLine": true,
     "tabWidth": 4,
     "htmlWhitespaceSensitivity": "ignore",
-    "plugins": ["prettier-plugin-java"],
+    "plugins": ["prettier-plugin-java", "prettier-plugin-xml"],
     "overrides": [
         {
             "files": "*.xhtml",
