@@ -1,0 +1,160 @@
+<ui:composition
+    template="/WEB-INF/templates/layout.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:p="primefaces"
+    xmlns:ui="jakarta.faces.facelets">
+    <ui:define name="content">
+        <style>
+            .ui-toolbar {
+                border: 0 !important;
+            }
+            .rating-actions .ui-button {
+                margin: 0 !important;
+            }
+            .rating-actions .ui-button:not(:first-child) {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+            .rating-actions .ui-button:not(:last-child) {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+        </style>
+        <div class="h-100 w-100 d-flex flex-column">
+            <h:form id="ratingForm" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+                <p:growl id="messages" showDetail="true" />
+                <p:toolbar>
+                    <p:toolbarGroup align="left" styleClass="border-0">
+                        <i class="pi pi-fw pi-star" />
+                        <span style="font-weight: bold">AVALIACOES</span>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right" styleClass="border-0">
+                        <span class="ui-input-icon-left" style="margin-right: 0.5rem">
+                            <i class="pi pi-search" />
+                            <p:inputText
+                                id="globalFilter"
+                                onkeyup="PrimeFaces.debounce(() => PF('dtRatings').filter())"
+                                placeholder="Pesquisar" />
+                        </span>
+                        <span class="rating-actions">
+                            <p:button value="Novo" icon="pi pi-plus" outcome="rating" styleClass="ui-button-success">
+                                <f:param name="mode" value="create" />
+                            </p:button>
+                            <p:commandButton
+                                id="delete-ratings-button"
+                                value="#{ratingListController.deleteButtonMessage}"
+                                icon="pi pi-trash"
+                                actionListener="#{ratingListController.deleteSelectedRatings}"
+                                styleClass="ui-button-danger"
+                                disabled="#{!ratingListController.hasSelectedRatings()}"
+                                update="@this :ratingForm:messages :ratingForm:dt-ratings">
+                                <p:confirm
+                                    header="Confirmacao"
+                                    message="Excluir as avaliacoes selecionadas?"
+                                    icon="pi pi-exclamation-triangle" />
+                            </p:commandButton>
+                        </span>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:scrollPanel mode="native" styleClass="w-100 p-0 m-0 rounded-0 border-0 flex-grow-1">
+                    <p:dataTable
+                id="dt-ratings"
+                var="rating"
+                value="#{ratingListController.lazyRatings}"
+                lazy="true"
+                reflow="true"
+                selectionMode="multiple"
+                selection="#{ratingListController.selectedRatings}"
+                rowKey="#{rating.id}"
+                paginator="true"
+                rows="10"
+                selectionRowMode="add"
+                paginatorPosition="bottom"
+                widgetVar="dtRatings">
+                <p:ajax event="rowSelect" update=":ratingForm:delete-ratings-button" />
+                <p:ajax event="rowUnselect" update=":ratingForm:delete-ratings-button" />
+                <p:ajax event="rowSelectCheckbox" update=":ratingForm:delete-ratings-button" />
+                <p:ajax event="rowUnselectCheckbox" update=":ratingForm:delete-ratings-button" />
+                <p:ajax event="toggleSelect" update=":ratingForm:delete-ratings-button" />
+
+                <p:column selectionBox="true" exportable="false" />
+
+                <p:column headerText="ID" sortBy="#{rating.id}">
+                    <h:outputText value="#{rating.id}" />
+                </p:column>
+
+                <p:column headerText="Usuario">
+                    <h:outputText value="#{rating.userName}" />
+                </p:column>
+
+                <p:column headerText="Midia">
+                    <h:outputText value="#{rating.mediaTitle}" />
+                </p:column>
+
+                <p:column headerText="Nota" sortBy="#{rating.score}">
+                    <h:outputText value="#{rating.score}" />
+                </p:column>
+
+                <p:column headerText="Comentario">
+                    <h:outputText value="#{rating.comment}" />
+                </p:column>
+
+                <p:column exportable="false" styleClass="text-center" headerText="Acoes" ariaHeaderText="Acoes">
+                    <span class="rating-actions">
+                        <p:button icon="pi pi-eye" outcome="rating" styleClass="ui-button-secondary">
+                            <f:param name="id" value="#{rating.id}" />
+                            <f:param name="mode" value="view" />
+                        </p:button>
+                        <p:button icon="pi pi-pencil" outcome="rating" styleClass="ui-button-success">
+                            <f:param name="id" value="#{rating.id}" />
+                            <f:param name="mode" value="edit" />
+                        </p:button>
+                        <p:commandButton
+                            icon="pi pi-trash"
+                            styleClass="ui-button-danger"
+                            process="@this"
+                            oncomplete="PF('deleteRatingDialog').show()">
+                            <f:setPropertyActionListener value="#{rating}" target="#{ratingListController.selectedRating}" />
+                        </p:commandButton>
+                    </span>
+                </p:column>
+            </p:dataTable>
+
+            <p:confirmDialog
+                widgetVar="deleteRatingDialog"
+                showEffect="fade"
+                width="300"
+                message="Excluir esta avaliacao?"
+                header="Confirmar"
+                severity="warn">
+                <p:commandButton
+                    value="Sim"
+                    icon="pi pi-check"
+                    actionListener="#{ratingListController.deleteRating}"
+                    process="@this"
+                    update=":ratingForm:messages :ratingForm:dt-ratings :ratingForm:delete-ratings-button"
+                    oncomplete="PF('deleteRatingDialog').hide()" />
+                <p:commandButton
+                    value="Nao"
+                    type="button"
+                    styleClass="ui-button-secondary"
+                    icon="pi pi-times"
+                    onclick="PF('deleteRatingDialog').hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                <p:commandButton
+                    value="Nao"
+                    type="button"
+                    styleClass="ui-confirmdialog-no ui-button-secondary"
+                    icon="pi pi-times" />
+            </p:confirmDialog>
+                </p:scrollPanel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

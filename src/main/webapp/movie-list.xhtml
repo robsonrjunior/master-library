@@ -1,0 +1,168 @@
+<ui:composition
+    template="/WEB-INF/templates/layout.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:p="primefaces"
+    xmlns:ui="jakarta.faces.facelets">
+    <ui:define name="content">
+        <style>
+            .ui-toolbar {
+                border: 0 !important;
+            }
+            .movie-actions .ui-button {
+                margin: 0 !important;
+            }
+            .movie-actions .ui-button:not(:first-child) {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+            .movie-actions .ui-button:not(:last-child) {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+        </style>
+        <div class="h-100 w-100 d-flex flex-column">
+            <h:form id="movieForm" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+                <p:growl id="messages" showDetail="true" />
+                <p:toolbar>
+                    <p:toolbarGroup align="left" styleClass="border-0">
+                        <i class="pi pi-fw pi-video" />
+                        <span style="font-weight: bold">FILMES</span>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right" styleClass="border-0">
+                        <span class="ui-input-icon-left" style="margin-right: 0.5rem">
+                            <i class="pi pi-search" />
+                            <p:inputText
+                                id="globalFilter"
+                                onkeyup="PrimeFaces.debounce(() => PF('dtMovies').filter())"
+                                placeholder="Pesquisar" />
+                        </span>
+                        <span class="movie-actions">
+                            <p:button value="Novo" icon="pi pi-plus" outcome="movie" styleClass="ui-button-success">
+                                <f:param name="mode" value="create" />
+                            </p:button>
+                            <p:commandButton
+                                id="delete-movies-button"
+                                value="#{movieListController.deleteButtonMessage}"
+                                icon="pi pi-trash"
+                                actionListener="#{movieListController.deleteSelectedMovies}"
+                                styleClass="ui-button-danger"
+                                disabled="#{!movieListController.hasSelectedMovies()}"
+                                update="@this :movieForm:messages :movieForm:dt-movies">
+                                <p:confirm
+                                    header="Confirmacao"
+                                    message="Excluir os filmes selecionados?"
+                                    icon="pi pi-exclamation-triangle" />
+                            </p:commandButton>
+                        </span>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:scrollPanel mode="native" styleClass="w-100 p-0 m-0 rounded-0 border-0 flex-grow-1">
+                    <p:dataTable
+                id="dt-movies"
+                var="movie"
+                value="#{movieListController.lazyMovies}"
+                lazy="true"
+                reflow="true"
+                selectionMode="multiple"
+                selection="#{movieListController.selectedMovies}"
+                rowKey="#{movie.id}"
+                paginator="true"
+                rows="10"
+                selectionRowMode="add"
+                paginatorPosition="bottom"
+                widgetVar="dtMovies">
+                <p:ajax event="rowSelect" update=":movieForm:delete-movies-button" />
+                <p:ajax event="rowUnselect" update=":movieForm:delete-movies-button" />
+                <p:ajax event="rowSelectCheckbox" update=":movieForm:delete-movies-button" />
+                <p:ajax event="rowUnselectCheckbox" update=":movieForm:delete-movies-button" />
+                <p:ajax event="toggleSelect" update=":movieForm:delete-movies-button" />
+
+                <p:column selectionBox="true" exportable="false" />
+
+                <p:column headerText="ID" sortBy="#{movie.id}">
+                    <h:outputText value="#{movie.id}" />
+                </p:column>
+
+                <p:column
+                    headerText="Titulo"
+                    sortBy="#{movie.title}"
+                    filterBy="#{movie.title}"
+                    filterMatchMode="contains">
+                    <h:outputText value="#{movie.title}" />
+                </p:column>
+
+                <p:column
+                    headerText="Diretor"
+                    sortBy="#{movie.director}"
+                    filterBy="#{movie.director}"
+                    filterMatchMode="contains">
+                    <h:outputText value="#{movie.director}" />
+                </p:column>
+
+                <p:column headerText="Duracao (min)" sortBy="#{movie.runtimeMinutes}">
+                    <h:outputText value="#{movie.runtimeMinutes}" />
+                </p:column>
+
+                <p:column headerText="Ano" sortBy="#{movie.releaseYear}">
+                    <h:outputText value="#{movie.releaseYear}" />
+                </p:column>
+
+                <p:column exportable="false" styleClass="text-center" headerText="Acoes" ariaHeaderText="Acoes">
+                    <span class="movie-actions">
+                        <p:button icon="pi pi-eye" outcome="movie" styleClass="ui-button-secondary">
+                            <f:param name="id" value="#{movie.id}" />
+                            <f:param name="mode" value="view" />
+                        </p:button>
+                        <p:button icon="pi pi-pencil" outcome="movie" styleClass="ui-button-success">
+                            <f:param name="id" value="#{movie.id}" />
+                            <f:param name="mode" value="edit" />
+                        </p:button>
+                        <p:commandButton
+                            icon="pi pi-trash"
+                            styleClass="ui-button-danger"
+                            process="@this"
+                            oncomplete="PF('deleteMovieDialog').show()">
+                            <f:setPropertyActionListener value="#{movie}" target="#{movieListController.selectedMovie}" />
+                        </p:commandButton>
+                    </span>
+                </p:column>
+            </p:dataTable>
+
+            <p:confirmDialog
+                widgetVar="deleteMovieDialog"
+                showEffect="fade"
+                width="300"
+                message="Excluir este filme?"
+                header="Confirmar"
+                severity="warn">
+                <p:commandButton
+                    value="Sim"
+                    icon="pi pi-check"
+                    actionListener="#{movieListController.deleteMovie}"
+                    process="@this"
+                    update=":movieForm:messages :movieForm:dt-movies :movieForm:delete-movies-button"
+                    oncomplete="PF('deleteMovieDialog').hide()" />
+                <p:commandButton
+                    value="Nao"
+                    type="button"
+                    styleClass="ui-button-secondary"
+                    icon="pi pi-times"
+                    onclick="PF('deleteMovieDialog').hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                <p:commandButton
+                    value="Nao"
+                    type="button"
+                    styleClass="ui-confirmdialog-no ui-button-secondary"
+                    icon="pi pi-times" />
+            </p:confirmDialog>
+                </p:scrollPanel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

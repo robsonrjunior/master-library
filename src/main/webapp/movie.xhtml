@@ -1,0 +1,148 @@
+<ui:composition
+    template="/WEB-INF/templates/layout.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:p="primefaces"
+    xmlns:ui="jakarta.faces.facelets">
+    <ui:define name="content">
+        <f:event type="preRenderView" listener="#{movieController.loadForm}" />
+        <style>
+            .ui-toolbar {
+                border: 0 !important;
+            }
+            .movie-actions .ui-button {
+                margin: 0 !important;
+            }
+            .movie-actions .ui-button:not(:first-child) {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+            .movie-actions .ui-button:not(:last-child) {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+            .ui-message {
+                border: 0 !important;
+                background: none !important;
+                padding: 0 !important;
+                margin: 0.25rem 0 0 0 !important;
+            }
+            .ui-message:empty {
+                display: none;
+            }
+            .ui-message .ui-message-error-detail {
+                display: block;
+                font-size: smaller;
+            }
+        </style>
+        <div class="h-100 w-100 d-flex flex-column">
+            <h:form id="movieForm" style="display: flex; flex-direction: column; flex: 1; min-height: 0">
+                <p:growl id="messages" showDetail="true" />
+                <p:toolbar>
+                    <p:toolbarGroup align="left" styleClass="border-0">
+                        <i class="pi pi-fw pi-video" />
+                        <span style="font-weight: bold">
+                            <h:outputText rendered="#{empty movieController.movie.title}" value="Filmes - Novo filme" />
+
+                            <h:outputText
+                                rendered="#{not empty movieController.movie.title}"
+                                value="Filmes - #{movieController.movie.title}" />
+                        </span>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right" styleClass="border-0">
+                        <p:outputPanel rendered="#{not movieController.viewMode}" styleClass="movie-actions">
+                            <p:commandButton
+                                value="Salvar"
+                                icon="pi pi-check"
+                                action="#{movieController.save}"
+                                ajax="false" />
+                            <p:button
+                                value="Cancelar"
+                                icon="pi pi-times"
+                                outcome="movie-list"
+                                styleClass="ui-button-secondary" />
+                        </p:outputPanel>
+                        <p:outputPanel rendered="#{movieController.viewMode}" styleClass="movie-actions">
+                            <p:button value="Editar" icon="pi pi-pencil" outcome="movie" styleClass="ui-button-success">
+                                <f:param name="id" value="#{movieController.id}" />
+                                <f:param name="mode" value="edit" />
+                            </p:button>
+                            <p:button
+                                value="Voltar"
+                                icon="pi pi-arrow-left"
+                                outcome="movie-list"
+                                styleClass="ui-button-secondary" />
+                        </p:outputPanel>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:scrollPanel mode="native" styleClass="w-100 p-0 m-0 rounded-0 border-0 flex-grow-1">
+                    <div class="m-3">
+                        <f:facet name="title">
+                            <h:outputText value="#{movieController.pageTitle}" />
+                        </f:facet>
+
+                        <p:outputPanel class="ui-fluid">
+                            <div class="row g-3">
+                                <ui:fragment rendered="#{not empty movieController.movie.id}">
+                                    <div class="col-4 mb-1">
+                                        <p:outputLabel for="movieId" value="ID" />
+                                        <p:inputText
+                                            id="movieId"
+                                            value="#{movieController.movie.id}"
+                                            required="true"
+                                            readonly="true" />
+                                        <p:message id="movieIdMsg" for="movieId" display="text" />
+                                    </div>
+                                    <div class="col-8 mb-1"></div>
+                                </ui:fragment>
+
+                                <div class="col-12 col-md-6 mb-1">
+                                    <p:outputLabel for="title" value="Titulo" />
+                                    <p:inputText
+                                        id="title"
+                                        value="#{movieController.movie.title}"
+                                        required="true"
+                                        readonly="#{movieController.viewMode}" />
+                                    <p:message id="titleMsg" for="title" display="text" />
+                                </div>
+                                <div class="col-12 col-md-6 mb-1">
+                                    <p:outputLabel for="director" value="Diretor" />
+                                    <p:inputText
+                                        id="director"
+                                        value="#{movieController.movie.director}"
+                                        readonly="#{movieController.viewMode}" />
+                                </div>
+                                <div class="col-12 col-md-6 mb-1">
+                                    <p:outputLabel for="runtimeMinutes" value="Duracao (min)" />
+                                    <p:inputNumber
+                                        id="runtimeMinutes"
+                                        value="#{movieController.movie.runtimeMinutes}"
+                                        readonly="#{movieController.viewMode}" />
+                                </div>
+                                <div class="col-12 col-md-6 mb-1">
+                                    <p:outputLabel
+                                        for="releaseYear"
+                                        value="Ano de Lancamento"
+                                        styleClass="d-block mb-1" />
+                                    <p:inputNumber
+                                        id="releaseYear"
+                                        value="#{movieController.movie.releaseYear}"
+                                        readonly="#{movieController.viewMode}" />
+                                </div>
+                                <div class="col-12 mb-1">
+                                    <p:outputLabel for="description" value="Descricao" />
+                                    <p:inputTextarea
+                                        id="description"
+                                        value="#{movieController.movie.description}"
+                                        readonly="#{movieController.viewMode}" />
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </div>
+                </p:scrollPanel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,168 @@
+<ui:composition
+    template="/WEB-INF/templates/layout.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:p="primefaces"
+    xmlns:ui="jakarta.faces.facelets">
+    <ui:define name="content">
+        <style>
+            .ui-toolbar {
+                border: 0 !important;
+            }
+            .series-actions .ui-button {
+                margin: 0 !important;
+            }
+            .series-actions .ui-button:not(:first-child) {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+            .series-actions .ui-button:not(:last-child) {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+        </style>
+        <div class="h-100 w-100 d-flex flex-column">
+            <h:form id="seriesForm" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+                <p:growl id="messages" showDetail="true" />
+                <p:toolbar>
+                    <p:toolbarGroup align="left" styleClass="border-0">
+                        <i class="pi pi-fw pi-desktop" />
+                        <span style="font-weight: bold">SERIES</span>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right" styleClass="border-0">
+                        <span class="ui-input-icon-left" style="margin-right: 0.5rem">
+                            <i class="pi pi-search" />
+                            <p:inputText
+                                id="globalFilter"
+                                onkeyup="PrimeFaces.debounce(() => PF('dtSeries').filter())"
+                                placeholder="Pesquisar" />
+                        </span>
+                        <span class="series-actions">
+                            <p:button value="Novo" icon="pi pi-plus" outcome="series" styleClass="ui-button-success">
+                                <f:param name="mode" value="create" />
+                            </p:button>
+                            <p:commandButton
+                                id="delete-series-button"
+                                value="#{seriesListController.deleteButtonMessage}"
+                                icon="pi pi-trash"
+                                actionListener="#{seriesListController.deleteSelectedSeries}"
+                                styleClass="ui-button-danger"
+                                disabled="#{!seriesListController.hasSelectedSeries()}"
+                                update="@this :seriesForm:messages :seriesForm:dt-series">
+                                <p:confirm
+                                    header="Confirmacao"
+                                    message="Excluir as series selecionadas?"
+                                    icon="pi pi-exclamation-triangle" />
+                            </p:commandButton>
+                        </span>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:scrollPanel mode="native" styleClass="w-100 p-0 m-0 rounded-0 border-0 flex-grow-1">
+                    <p:dataTable
+                id="dt-series"
+                var="serie"
+                value="#{seriesListController.lazySeries}"
+                lazy="true"
+                reflow="true"
+                selectionMode="multiple"
+                selection="#{seriesListController.selectedSeries}"
+                rowKey="#{serie.id}"
+                paginator="true"
+                rows="10"
+                selectionRowMode="add"
+                paginatorPosition="bottom"
+                widgetVar="dtSeries">
+                <p:ajax event="rowSelect" update=":seriesForm:delete-series-button" />
+                <p:ajax event="rowUnselect" update=":seriesForm:delete-series-button" />
+                <p:ajax event="rowSelectCheckbox" update=":seriesForm:delete-series-button" />
+                <p:ajax event="rowUnselectCheckbox" update=":seriesForm:delete-series-button" />
+                <p:ajax event="toggleSelect" update=":seriesForm:delete-series-button" />
+
+                <p:column selectionBox="true" exportable="false" />
+
+                <p:column headerText="ID" sortBy="#{serie.id}">
+                    <h:outputText value="#{serie.id}" />
+                </p:column>
+
+                <p:column
+                    headerText="Titulo"
+                    sortBy="#{serie.title}"
+                    filterBy="#{serie.title}"
+                    filterMatchMode="contains">
+                    <h:outputText value="#{serie.title}" />
+                </p:column>
+
+                <p:column headerText="Temporadas" sortBy="#{serie.numberOfSeasons}">
+                    <h:outputText value="#{serie.numberOfSeasons}" />
+                </p:column>
+
+                <p:column headerText="Episodios" sortBy="#{serie.numberOfEpisodes}">
+                    <h:outputText value="#{serie.numberOfEpisodes}" />
+                </p:column>
+
+                <p:column headerText="Ano Inicio" sortBy="#{serie.startYear}">
+                    <h:outputText value="#{serie.startYear}" />
+                </p:column>
+
+                <p:column headerText="Status" sortBy="#{serie.status}">
+                    <h:outputText value="#{serie.status}" />
+                </p:column>
+
+                <p:column exportable="false" styleClass="text-center" headerText="Acoes" ariaHeaderText="Acoes">
+                    <span class="series-actions">
+                        <p:button icon="pi pi-eye" outcome="series" styleClass="ui-button-secondary">
+                            <f:param name="id" value="#{serie.id}" />
+                            <f:param name="mode" value="view" />
+                        </p:button>
+                        <p:button icon="pi pi-pencil" outcome="series" styleClass="ui-button-success">
+                            <f:param name="id" value="#{serie.id}" />
+                            <f:param name="mode" value="edit" />
+                        </p:button>
+                        <p:commandButton
+                            icon="pi pi-trash"
+                            styleClass="ui-button-danger"
+                            process="@this"
+                            oncomplete="PF('deleteSeriesDialog').show()">
+                            <f:setPropertyActionListener value="#{serie}" target="#{seriesListController.selectedSerie}" />
+                        </p:commandButton>
+                    </span>
+                </p:column>
+            </p:dataTable>
+
+            <p:confirmDialog
+                widgetVar="deleteSeriesDialog"
+                showEffect="fade"
+                width="300"
+                message="Excluir esta serie?"
+                header="Confirmar"
+                severity="warn">
+                <p:commandButton
+                    value="Sim"
+                    icon="pi pi-check"
+                    actionListener="#{seriesListController.deleteSerie}"
+                    process="@this"
+                    update=":seriesForm:messages :seriesForm:dt-series :seriesForm:delete-series-button"
+                    oncomplete="PF('deleteSeriesDialog').hide()" />
+                <p:commandButton
+                    value="Nao"
+                    type="button"
+                    styleClass="ui-button-secondary"
+                    icon="pi pi-times"
+                    onclick="PF('deleteSeriesDialog').hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                <p:commandButton
+                    value="Nao"
+                    type="button"
+                    styleClass="ui-confirmdialog-no ui-button-secondary"
+                    icon="pi pi-times" />
+            </p:confirmDialog>
+                </p:scrollPanel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,165 @@
+<ui:composition
+    template="/WEB-INF/templates/layout.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:p="primefaces"
+    xmlns:ui="jakarta.faces.facelets">
+    <ui:define name="content">
+        <f:event type="preRenderView" listener="#{ratingController.loadForm}" />
+        <style>
+            .ui-toolbar {
+                border: 0 !important;
+            }
+            .rating-actions .ui-button {
+                margin: 0 !important;
+            }
+            .rating-actions .ui-button:not(:first-child) {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+            .rating-actions .ui-button:not(:last-child) {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+            .ui-message {
+                border: 0 !important;
+                background: none !important;
+                padding: 0 !important;
+                margin: 0.25rem 0 0 0 !important;
+            }
+            .ui-message:empty {
+                display: none;
+            }
+            .ui-message .ui-message-error-detail {
+                display: block;
+                font-size: smaller;
+            }
+        </style>
+        <div class="h-100 w-100 d-flex flex-column">
+            <h:form id="ratingForm" style="display: flex; flex-direction: column; flex: 1; min-height: 0">
+                <p:growl id="messages" showDetail="true" />
+                <p:toolbar>
+                    <p:toolbarGroup align="left" styleClass="border-0">
+                        <i class="pi pi-fw pi-star" />
+                        <span style="font-weight: bold">
+                            <h:outputText rendered="#{empty ratingController.rating.id}" value="Avaliacoes - Nova avaliacao" />
+
+                            <h:outputText
+                                rendered="#{not empty ratingController.rating.id}"
+                                value="Avaliacoes - #{ratingController.rating.user.username} / #{ratingController.rating.media.title}" />
+                        </span>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right" styleClass="border-0">
+                        <p:outputPanel rendered="#{not ratingController.viewMode}" styleClass="rating-actions">
+                            <p:commandButton
+                                value="Salvar"
+                                icon="pi pi-check"
+                                action="#{ratingController.save}"
+                                ajax="false" />
+                            <p:button
+                                value="Cancelar"
+                                icon="pi pi-times"
+                                outcome="rating-list"
+                                styleClass="ui-button-secondary" />
+                        </p:outputPanel>
+                        <p:outputPanel rendered="#{ratingController.viewMode}" styleClass="rating-actions">
+                            <p:button value="Editar" icon="pi pi-pencil" outcome="rating" styleClass="ui-button-success">
+                                <f:param name="id" value="#{ratingController.id}" />
+                                <f:param name="mode" value="edit" />
+                            </p:button>
+                            <p:button
+                                value="Voltar"
+                                icon="pi pi-arrow-left"
+                                outcome="rating-list"
+                                styleClass="ui-button-secondary" />
+                        </p:outputPanel>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:scrollPanel mode="native" styleClass="w-100 p-0 m-0 rounded-0 border-0 flex-grow-1">
+                    <div class="m-3">
+                        <f:facet name="title">
+                            <h:outputText value="#{ratingController.pageTitle}" />
+                        </f:facet>
+
+                        <p:outputPanel class="ui-fluid">
+                            <div class="row g-3">
+                                <ui:fragment rendered="#{not empty ratingController.rating.id}">
+                                    <div class="col-4 mb-1">
+                                        <p:outputLabel for="ratingId" value="ID" />
+                                        <p:inputText
+                                            id="ratingId"
+                                            value="#{ratingController.rating.id}"
+                                            required="true"
+                                            readonly="true" />
+                                        <p:message id="ratingIdMsg" for="ratingId" display="text" />
+                                    </div>
+                                    <div class="col-8 mb-1"></div>
+                                </ui:fragment>
+
+                                <ui:fragment rendered="#{ratingController.createMode}">
+                                    <div class="col-12 col-md-6 mb-1">
+                                        <p:outputLabel for="userSelect" value="Usuario" />
+                                        <p:selectOneMenu
+                                            id="userSelect"
+                                            value="#{ratingController.userId}"
+                                            required="true">
+                                            <f:selectItems value="#{ratingController.userOptions}" />
+                                        </p:selectOneMenu>
+                                        <p:message id="userSelectMsg" for="userSelect" display="text" />
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-1">
+                                        <p:outputLabel for="mediaSelect" value="Midia" />
+                                        <p:selectOneMenu
+                                            id="mediaSelect"
+                                            value="#{ratingController.mediaId}"
+                                            required="true">
+                                            <f:selectItems value="#{ratingController.mediaOptions}" />
+                                        </p:selectOneMenu>
+                                        <p:message id="mediaSelectMsg" for="mediaSelect" display="text" />
+                                    </div>
+                                </ui:fragment>
+
+                                <ui:fragment rendered="#{not ratingController.createMode}">
+                                    <div class="col-12 col-md-6 mb-1">
+                                        <p:outputLabel for="ratingUser" value="Usuario" />
+                                        <h:outputText
+                                            id="ratingUser"
+                                            value="#{ratingController.rating.user.username}"
+                                            styleClass="form-control-plaintext" />
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-1">
+                                        <p:outputLabel for="ratingMedia" value="Midia" />
+                                        <h:outputText
+                                            id="ratingMedia"
+                                            value="#{ratingController.rating.media.title}"
+                                            styleClass="form-control-plaintext" />
+                                    </div>
+                                </ui:fragment>
+
+                                <div class="col-12 col-md-4 mb-1">
+                                    <p:outputLabel for="score" value="Nota (0-10)" />
+                                    <p:inputNumber
+                                        id="score"
+                                        value="#{ratingController.rating.score}"
+                                        required="true"
+                                        readonly="#{ratingController.viewMode}" />
+                                    <p:message id="scoreMsg" for="score" display="text" />
+                                </div>
+                                <div class="col-12 col-md-8 mb-1"></div>
+                                <div class="col-12 mb-1">
+                                    <p:outputLabel for="comment" value="Comentario" />
+                                    <p:inputTextarea
+                                        id="comment"
+                                        value="#{ratingController.rating.comment}"
+                                        readonly="#{ratingController.viewMode}" />
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </div>
+                </p:scrollPanel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

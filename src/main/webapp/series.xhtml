@@ -1,0 +1,161 @@
+<ui:composition
+    template="/WEB-INF/templates/layout.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:p="primefaces"
+    xmlns:ui="jakarta.faces.facelets">
+    <ui:define name="content">
+        <f:event type="preRenderView" listener="#{seriesController.loadForm}" />
+        <style>
+            .ui-toolbar {
+                border: 0 !important;
+            }
+            .series-actions .ui-button {
+                margin: 0 !important;
+            }
+            .series-actions .ui-button:not(:first-child) {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+            .series-actions .ui-button:not(:last-child) {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+            .ui-message {
+                border: 0 !important;
+                background: none !important;
+                padding: 0 !important;
+                margin: 0.25rem 0 0 0 !important;
+            }
+            .ui-message:empty {
+                display: none;
+            }
+            .ui-message .ui-message-error-detail {
+                display: block;
+                font-size: smaller;
+            }
+        </style>
+        <div class="h-100 w-100 d-flex flex-column">
+            <h:form id="seriesForm" style="display: flex; flex-direction: column; flex: 1; min-height: 0">
+                <p:growl id="messages" showDetail="true" />
+                <p:toolbar>
+                    <p:toolbarGroup align="left" styleClass="border-0">
+                        <i class="pi pi-fw pi-desktop" />
+                        <span style="font-weight: bold">
+                            <h:outputText rendered="#{empty seriesController.series.title}" value="Series - Nova serie" />
+
+                            <h:outputText
+                                rendered="#{not empty seriesController.series.title}"
+                                value="Series - #{seriesController.series.title}" />
+                        </span>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right" styleClass="border-0">
+                        <p:outputPanel rendered="#{not seriesController.viewMode}" styleClass="series-actions">
+                            <p:commandButton
+                                value="Salvar"
+                                icon="pi pi-check"
+                                action="#{seriesController.save}"
+                                ajax="false" />
+                            <p:button
+                                value="Cancelar"
+                                icon="pi pi-times"
+                                outcome="series-list"
+                                styleClass="ui-button-secondary" />
+                        </p:outputPanel>
+                        <p:outputPanel rendered="#{seriesController.viewMode}" styleClass="series-actions">
+                            <p:button value="Editar" icon="pi pi-pencil" outcome="series" styleClass="ui-button-success">
+                                <f:param name="id" value="#{seriesController.id}" />
+                                <f:param name="mode" value="edit" />
+                            </p:button>
+                            <p:button
+                                value="Voltar"
+                                icon="pi pi-arrow-left"
+                                outcome="series-list"
+                                styleClass="ui-button-secondary" />
+                        </p:outputPanel>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:scrollPanel mode="native" styleClass="w-100 p-0 m-0 rounded-0 border-0 flex-grow-1">
+                    <div class="m-3">
+                        <f:facet name="title">
+                            <h:outputText value="#{seriesController.pageTitle}" />
+                        </f:facet>
+
+                        <p:outputPanel class="ui-fluid">
+                            <div class="row g-3">
+                                <ui:fragment rendered="#{not empty seriesController.series.id}">
+                                    <div class="col-4 mb-1">
+                                        <p:outputLabel for="seriesId" value="ID" />
+                                        <p:inputText
+                                            id="seriesId"
+                                            value="#{seriesController.series.id}"
+                                            required="true"
+                                            readonly="true" />
+                                        <p:message id="seriesIdMsg" for="seriesId" display="text" />
+                                    </div>
+                                    <div class="col-8 mb-1"></div>
+                                </ui:fragment>
+
+                                <div class="col-12 col-md-6 mb-1">
+                                    <p:outputLabel for="title" value="Titulo" />
+                                    <p:inputText
+                                        id="title"
+                                        value="#{seriesController.series.title}"
+                                        required="true"
+                                        readonly="#{seriesController.viewMode}" />
+                                    <p:message id="titleMsg" for="title" display="text" />
+                                </div>
+                                <div class="col-12 col-md-6 mb-1">
+                                    <p:outputLabel for="numberOfSeasons" value="N# de Temporadas" />
+                                    <p:inputNumber
+                                        id="numberOfSeasons"
+                                        value="#{seriesController.series.numberOfSeasons}"
+                                        readonly="#{seriesController.viewMode}" />
+                                </div>
+                                <div class="col-12 col-md-6 mb-1">
+                                    <p:outputLabel for="numberOfEpisodes" value="N# de Episodios" />
+                                    <p:inputNumber
+                                        id="numberOfEpisodes"
+                                        value="#{seriesController.series.numberOfEpisodes}"
+                                        readonly="#{seriesController.viewMode}" />
+                                </div>
+                                <div class="col-12 col-md-6 mb-1">
+                                    <p:outputLabel for="startYear" value="Ano de Inicio" />
+                                    <p:inputNumber
+                                        id="startYear"
+                                        value="#{seriesController.series.startYear}"
+                                        readonly="#{seriesController.viewMode}" />
+                                </div>
+                                <div class="col-12 col-md-6 mb-1">
+                                    <p:outputLabel for="endYear" value="Ano de Termino" />
+                                    <p:inputNumber
+                                        id="endYear"
+                                        value="#{seriesController.series.endYear}"
+                                        readonly="#{seriesController.viewMode}" />
+                                </div>
+                                <div class="col-12 col-md-6 mb-1">
+                                    <p:outputLabel for="status" value="Status" />
+                                    <p:selectOneMenu
+                                        id="status"
+                                        value="#{seriesController.series.status}"
+                                        disabled="#{seriesController.viewMode}">
+                                        <f:selectItems value="#{seriesController.statusOptions}" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="col-12 mb-1">
+                                    <p:outputLabel for="description" value="Descricao" />
+                                    <p:inputTextarea
+                                        id="description"
+                                        value="#{seriesController.series.description}"
+                                        readonly="#{seriesController.viewMode}" />
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </div>
+                </p:scrollPanel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
