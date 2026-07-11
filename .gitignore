@@ -9,3 +9,6 @@ openspec/
 # Others
 .env
 node_modules/
+
+# Logs
+*.log

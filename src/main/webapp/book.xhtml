@@ -1,0 +1,155 @@
+<ui:composition
+    template="/WEB-INF/templates/layout.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:p="primefaces"
+    xmlns:ui="jakarta.faces.facelets">
+    <ui:define name="content">
+        <f:event type="preRenderView" listener="#{bookController.loadForm}" />
+        <style>
+            .ui-toolbar {
+                border: 0 !important;
+            }
+            .book-actions .ui-button {
+                margin: 0 !important;
+            }
+            .book-actions .ui-button:not(:first-child) {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+            .book-actions .ui-button:not(:last-child) {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+            .ui-message {
+                border: 0 !important;
+                background: none !important;
+                padding: 0 !important;
+                margin: 0.25rem 0 0 0 !important;
+            }
+            .ui-message:empty {
+                display: none;
+            }
+            .ui-message .ui-message-error-detail {
+                display: block;
+                font-size: smaller;
+            }
+        </style>
+        <div class="h-100 w-100 d-flex flex-column">
+            <h:form id="bookForm" style="display: flex; flex-direction: column; flex: 1; min-height: 0">
+                <p:growl id="messages" showDetail="true" />
+                <p:toolbar>
+                    <p:toolbarGroup align="left" styleClass="border-0">
+                        <i class="pi pi-fw pi-book" />
+                        <span style="font-weight: bold">
+                            <h:outputText rendered="#{empty bookController.book.title}" value="Livros - Novo livro" />
+
+                            <h:outputText
+                                rendered="#{not empty bookController.book.title}"
+                                value="Livros - #{bookController.book.title}" />
+                        </span>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right" styleClass="border-0">
+                        <p:outputPanel rendered="#{not bookController.viewMode}" styleClass="book-actions">
+                            <p:commandButton
+                                value="Salvar"
+                                icon="pi pi-check"
+                                action="#{bookController.save}"
+                                ajax="false" />
+                            <p:button
+                                value="Cancelar"
+                                icon="pi pi-times"
+                                outcome="book-list"
+                                styleClass="ui-button-secondary" />
+                        </p:outputPanel>
+                        <p:outputPanel rendered="#{bookController.viewMode}" styleClass="book-actions">
+                            <p:button value="Editar" icon="pi pi-pencil" outcome="book" styleClass="ui-button-success">
+                                <f:param name="id" value="#{bookController.id}" />
+                                <f:param name="mode" value="edit" />
+                            </p:button>
+                            <p:button
+                                value="Voltar"
+                                icon="pi pi-arrow-left"
+                                outcome="book-list"
+                                styleClass="ui-button-secondary" />
+                        </p:outputPanel>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:scrollPanel mode="native" styleClass="w-100 p-0 m-0 rounded-0 border-0 flex-grow-1">
+                    <div class="m-3">
+                        <f:facet name="title">
+                            <h:outputText value="#{bookController.pageTitle}" />
+                        </f:facet>
+
+                        <p:outputPanel class="ui-fluid">
+                            <div class="row g-3">
+                                <ui:fragment rendered="#{not empty bookController.book.id}">
+                                    <div class="col-4 mb-1">
+                                        <p:outputLabel for="bookId" value="ID" />
+                                        <p:inputText
+                                            id="bookId"
+                                            value="#{bookController.book.id}"
+                                            required="true"
+                                            readonly="true" />
+                                        <p:message id="bookIdMsg" for="bookId" display="text" />
+                                    </div>
+                                    <div class="col-8 mb-1"></div>
+                                </ui:fragment>
+
+                                <div class="col-12 col-md-6 mb-1">
+                                    <p:outputLabel for="title" value="Título" />
+                                    <p:inputText
+                                        id="title"
+                                        value="#{bookController.book.title}"
+                                        required="true"
+                                        readonly="#{bookController.viewMode}" />
+                                    <p:message id="titleMsg" for="title" display="text" />
+                                </div>
+                                <div class="col-12 col-md-6 mb-1">
+                                    <p:outputLabel for="author" value="Autor" />
+                                    <p:inputText
+                                        id="author"
+                                        value="#{bookController.book.author}"
+                                        readonly="#{bookController.viewMode}" />
+                                </div>
+                                <div class="col-12 col-md-12 mb-1">
+                                    <p:outputLabel for="isbn" value="ISBN" />
+                                    <p:inputText
+                                        id="isbn"
+                                        value="#{bookController.book.isbn}"
+                                        readonly="#{bookController.viewMode}" />
+                                </div>
+                                <div class="col-12 col-md-6 mb-1">
+                                    <p:outputLabel for="pageCount" value="Nº de Páginas" />
+                                    <p:inputNumber
+                                        id="pageCount"
+                                        value="#{bookController.book.pageCount}"
+                                        readonly="#{bookController.viewMode}" />
+                                </div>
+                                <div class="col-12 col-md-6 mb-1">
+                                    <p:outputLabel
+                                        for="publishedYear"
+                                        value="Ano de Publicação"
+                                        styleClass="d-block mb-1" />
+                                    <p:inputNumber
+                                        id="publishedYear"
+                                        value="#{bookController.book.publishedYear}"
+                                        readonly="#{bookController.viewMode}" />
+                                </div>
+                                <div class="col-12 mb-1">
+                                    <p:outputLabel for="description" value="Descrição" />
+                                    <p:inputTextarea
+                                        id="description"
+                                        value="#{bookController.book.description}"
+                                        readonly="#{bookController.viewMode}" />
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </div>
+                </p:scrollPanel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

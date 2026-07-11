@@ -1,0 +1,129 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:p="primefaces"
+    xmlns:ui="jakarta.faces.facelets">
+    <p:megaMenu
+        orientation="horizontal"
+        autoDisplay="false"
+        styleClass="rounded-bottom-0 border-top-0 border-start-0 border-end-0">
+        <f:facet name="start">
+            <div class="d-flex align-items-center h-100">
+                <p:graphicImage name="images/master-library.png" library="showcase" width="32" />
+            </div>
+        </f:facet>
+        <p:submenu label="Vídeos" icon="pi pi-fw pi-video">
+            <p:column>
+                <p:submenu label="Vídeo 1">
+                    <p:menuitem value="Vídeo 1.1" />
+                    <p:menuitem value="Vídeo 1.2" />
+                </p:submenu>
+                <p:submenu label="Vídeo 2">
+                    <p:menuitem value="Vídeo 2.1" />
+                    <p:menuitem value="Vídeo 2.2" />
+                </p:submenu>
+            </p:column>
+
+            <p:column>
+                <p:submenu label="Vídeo 3">
+                    <p:menuitem value="Vídeo 3.1" />
+                    <p:menuitem value="Vídeo 3.2" />
+                </p:submenu>
+                <p:submenu label="Vídeo 4">
+                    <p:menuitem value="Vídeo 4.1" />
+                    <p:menuitem value="Vídeo 4.2" />
+                </p:submenu>
+            </p:column>
+        </p:submenu>
+
+        <p:submenu label="Usuários" icon="pi pi-fw pi-users">
+            <p:column>
+                <p:submenu label="Usuário 1">
+                    <p:menuitem value="Usuário 1.1" />
+                    <p:menuitem value="Usuário 1.2" />
+                </p:submenu>
+                <p:submenu label="Usuário 2">
+                    <p:menuitem value="Usuário 2.1" />
+                    <p:menuitem value="Usuário 2.2" />
+                </p:submenu>
+            </p:column>
+
+            <p:column>
+                <p:submenu label="Usuário 3">
+                    <p:menuitem value="Usuário 3.1" />
+                    <p:menuitem value="Usuário 3.2" />
+                </p:submenu>
+                <p:submenu label="Usuário 4">
+                    <p:menuitem value="Usuário 4.1" />
+                    <p:menuitem value="Usuário 4.2" />
+                </p:submenu>
+            </p:column>
+            <p:column>
+                <p:submenu label="Usuário 5">
+                    <p:menuitem value="Usuário 5.1" />
+                    <p:menuitem value="Usuário 5.2" />
+                </p:submenu>
+                <p:submenu label="Usuário 6">
+                    <p:menuitem value="Usuário 6.1" />
+                    <p:menuitem value="Usuário 6.2" />
+                </p:submenu>
+            </p:column>
+        </p:submenu>
+
+        <p:submenu label="Eventos" icon="pi pi-fw pi-calendar">
+            <p:column>
+                <p:submenu label="Evento 1">
+                    <p:menuitem value="Evento 1.1" />
+                    <p:menuitem value="Evento 1.2" />
+                </p:submenu>
+                <p:submenu label="Evento 2">
+                    <p:menuitem value="Evento 2.1" />
+                    <p:menuitem value="Evento 2.2" />
+                </p:submenu>
+            </p:column>
+
+            <p:column>
+                <p:submenu label="Evento 3">
+                    <p:menuitem value="Evento 3.1" />
+                    <p:menuitem value="Evento 3.2" />
+                </p:submenu>
+                <p:submenu label="Evento 4">
+                    <p:menuitem value="Evento 4.1" />
+                    <p:menuitem value="Evento 4.2" />
+                </p:submenu>
+            </p:column>
+        </p:submenu>
+
+        <p:submenu label="Configurações" icon="pi pi-fw pi-cog">
+            <p:column>
+                <p:submenu label="Configuração 1">
+                    <p:menuitem value="Configuração 1.1" />
+                    <p:menuitem value="Configuração 1.2" />
+                </p:submenu>
+                <p:submenu label="Configuração 2">
+                    <p:menuitem value="Configuração 2.1" />
+                    <p:menuitem value="Configuração 2.2" />
+                </p:submenu>
+                <p:submenu label="Configuração 3">
+                    <p:menuitem value="Configuração 3.1" />
+                    <p:menuitem value="Configuração 3.2" />
+                </p:submenu>
+            </p:column>
+
+            <p:column>
+                <p:submenu label="Configuração 4">
+                    <p:menuitem value="Configuração 4.1" />
+                    <p:menuitem value="Configuração 4.2" />
+                </p:submenu>
+            </p:column>
+        </p:submenu>
+
+        <f:facet name="end">
+            <div class="ui-input-icon-left mr-2">
+                <i class="pi pi-fw pi-search" />
+                <p:inputText placeholder="Pesquisar" />
+            </div>
+        </f:facet>
+    </p:megaMenu>
+</ui:composition>

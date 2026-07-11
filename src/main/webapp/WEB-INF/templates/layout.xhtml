@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:p="primefaces"
+    xmlns:ui="jakarta.faces.facelets">
+    <f:metadata>
+        <ui:insert name="metadata" />
+    </f:metadata>
+    <h:head>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+            crossorigin="anonymous" />
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"></script>
+    </h:head>
+
+    <h:body styleClass="vw-100 vh-100 p-3 d-flex flex-column">
+        <div class="card w-100 h-100 overflow-hidden d-flex flex-column">
+            <ui:include src="/WEB-INF/includes/shell.xhtml" />
+
+            <ui:include src="/WEB-INF/includes/footer.xhtml" />
+        </div>
+    </h:body>
+</html>

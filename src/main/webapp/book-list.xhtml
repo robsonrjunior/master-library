@@ -1,0 +1,172 @@
+<ui:composition
+    template="/WEB-INF/templates/layout.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:p="primefaces"
+    xmlns:ui="jakarta.faces.facelets">
+    <ui:define name="content">
+        <style>
+            .ui-toolbar {
+                border: 0 !important;
+            }
+            .book-actions .ui-button {
+                margin: 0 !important;
+            }
+            .book-actions .ui-button:not(:first-child) {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+            .book-actions .ui-button:not(:last-child) {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+        </style>
+        <div class="h-100 w-100 d-flex flex-column">
+            <h:form id="bookForm" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+                <p:growl id="messages" showDetail="true" />
+                <p:toolbar>
+                    <p:toolbarGroup align="left" styleClass="border-0">
+                        <i class="pi pi-fw pi-book" />
+                        <span style="font-weight: bold">LIVROS</span>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right" styleClass="border-0">
+                        <span class="ui-input-icon-left" style="margin-right: 0.5rem">
+                            <i class="pi pi-search" />
+                            <p:inputText
+                                id="globalFilter"
+                                onkeyup="PrimeFaces.debounce(() => PF('dtBooks').filter())"
+                                placeholder="Pesquisar" />
+                        </span>
+                        <span class="book-actions">
+                            <p:button value="Novo" icon="pi pi-plus" outcome="book" styleClass="ui-button-success">
+                                <f:param name="mode" value="create" />
+                            </p:button>
+                            <p:commandButton
+                                id="delete-books-button"
+                                value="#{bookListController.deleteButtonMessage}"
+                                icon="pi pi-trash"
+                                actionListener="#{bookListController.deleteSelectedBooks}"
+                                styleClass="ui-button-danger"
+                                disabled="#{!bookListController.hasSelectedBooks()}"
+                                update="@this :bookForm:messages :bookForm:dt-books">
+                                <p:confirm
+                                    header="Confirmação"
+                                    message="Excluir os livros selecionados?"
+                                    icon="pi pi-exclamation-triangle" />
+                            </p:commandButton>
+                        </span>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:scrollPanel mode="native" styleClass="w-100 p-0 m-0 rounded-0 border-0 flex-grow-1">
+                    <p:dataTable
+                id="dt-books"
+                var="book"
+                value="#{bookListController.lazyBooks}"
+                lazy="true"
+                reflow="true"
+                selectionMode="multiple"
+                selection="#{bookListController.selectedBooks}"
+                rowKey="#{book.id}"
+                paginator="true"
+                rows="10"
+                selectionRowMode="add"
+                paginatorPosition="bottom"
+                widgetVar="dtBooks">
+                <p:ajax event="rowSelect" update=":bookForm:delete-books-button" />
+                <p:ajax event="rowUnselect" update=":bookForm:delete-books-button" />
+                <p:ajax event="rowSelectCheckbox" update=":bookForm:delete-books-button" />
+                <p:ajax event="rowUnselectCheckbox" update=":bookForm:delete-books-button" />
+                <p:ajax event="toggleSelect" update=":bookForm:delete-books-button" />
+
+                <p:column selectionBox="true" exportable="false" />
+
+                <p:column headerText="ID" sortBy="#{book.id}">
+                    <h:outputText value="#{book.id}" />
+                </p:column>
+
+                <p:column
+                    headerText="Título"
+                    sortBy="#{book.title}"
+                    filterBy="#{book.title}"
+                    filterMatchMode="contains">
+                    <h:outputText value="#{book.title}" />
+                </p:column>
+
+                <p:column
+                    headerText="Autor"
+                    sortBy="#{book.author}"
+                    filterBy="#{book.author}"
+                    filterMatchMode="contains">
+                    <h:outputText value="#{book.author}" />
+                </p:column>
+
+                <p:column headerText="ISBN" sortBy="#{book.isbn}" filterBy="#{book.isbn}" filterMatchMode="contains">
+                    <h:outputText value="#{book.isbn}" />
+                </p:column>
+
+                <p:column headerText="Páginas" sortBy="#{book.pageCount}">
+                    <h:outputText value="#{book.pageCount}" />
+                </p:column>
+
+                <p:column headerText="Ano" sortBy="#{book.publishedYear}">
+                    <h:outputText value="#{book.publishedYear}" />
+                </p:column>
+
+                <p:column exportable="false" styleClass="text-center" headerText="Ações" ariaHeaderText="Ações">
+                    <span class="book-actions">
+                        <p:button icon="pi pi-eye" outcome="book" styleClass="ui-button-secondary">
+                            <f:param name="id" value="#{book.id}" />
+                            <f:param name="mode" value="view" />
+                        </p:button>
+                        <p:button icon="pi pi-pencil" outcome="book" styleClass="ui-button-success">
+                            <f:param name="id" value="#{book.id}" />
+                            <f:param name="mode" value="edit" />
+                        </p:button>
+                        <p:commandButton
+                            icon="pi pi-trash"
+                            styleClass="ui-button-danger"
+                            process="@this"
+                            oncomplete="PF('deleteBookDialog').show()">
+                            <f:setPropertyActionListener value="#{book}" target="#{bookListController.selectedBook}" />
+                        </p:commandButton>
+                    </span>
+                </p:column>
+            </p:dataTable>
+
+            <p:confirmDialog
+                widgetVar="deleteBookDialog"
+                showEffect="fade"
+                width="300"
+                message="Excluir este livro?"
+                header="Confirmar"
+                severity="warn">
+                <p:commandButton
+                    value="Sim"
+                    icon="pi pi-check"
+                    actionListener="#{bookListController.deleteBook}"
+                    process="@this"
+                    update=":bookForm:messages :bookForm:dt-books :bookForm:delete-books-button"
+                    oncomplete="PF('deleteBookDialog').hide()" />
+                <p:commandButton
+                    value="Não"
+                    type="button"
+                    styleClass="ui-button-secondary"
+                    icon="pi pi-times"
+                    onclick="PF('deleteBookDialog').hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                <p:commandButton
+                    value="Não"
+                    type="button"
+                    styleClass="ui-confirmdialog-no ui-button-secondary"
+                    icon="pi pi-times" />
+            </p:confirmDialog>
+                </p:scrollPanel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

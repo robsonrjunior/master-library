@@ -1,0 +1,40 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:p="primefaces"
+    xmlns:ui="jakarta.faces.facelets">
+    <style>
+        .ui-panelmenu-header {
+            border: 0 !important;
+            border-radius: 0 !important;
+        }
+        .ui-panelmenu-content {
+            border: 0 !important;
+            border-radius: 0 !important;
+        }
+        .ui-scrollpanel {
+            border-left: 0 !important;
+            border-top: 0 !important;
+            border-bottom: 0 !important;
+            border-radius: 0 !important;
+        }
+    </style>
+
+    <p:scrollPanel
+        mode="native"
+        styleClass="card h-100 p-0 m-0 border-top-0 border-left-0 border-bottom-0 rounded-0"
+        style="width: 280px">
+        <p:panelMenu styleClass="h-auto m-0">
+            <p:submenu label="Produtos" icon="pi pi-fw pi-box">
+                <p:menuitem value="Livros" icon="pi pi-fw pi-book" outcome="book-list" />
+                <p:menuitem value="Filmes" icon="pi pi-fw pi-video" outcome="movie-crud" />
+                <p:menuitem value="Séries" icon="pi pi-fw pi-desktop" outcome="series-crud" />
+            </p:submenu>
+            <p:submenu label="Administração" icon="pi pi-fw pi-cog">
+                <p:menuitem value="Usuários" icon="pi pi-fw pi-users" outcome="user-crud" />
+                <p:menuitem value="Avaliações" icon="pi pi-fw pi-star" outcome="rating-crud" />
+            </p:submenu>
+        </p:panelMenu>
+    </p:scrollPanel>
+</ui:composition>
