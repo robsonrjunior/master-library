@@ -2,15 +2,15 @@ package com.github.robsonrjunior.master.library.configs;
 
 import com.github.robsonrjunior.master.library.model.Book;
 import com.github.robsonrjunior.master.library.service.BookService;
-import jakarta.annotation.PostConstruct;
-import jakarta.ejb.Startup;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Initialized;
+import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-@Startup
 public class DatabaseSeeder {
 
     private static final Logger LOG = Logger.getLogger(DatabaseSeeder.class.getName());
@@ -18,8 +18,8 @@ public class DatabaseSeeder {
     @Inject
     private BookService bookService;
 
-    @PostConstruct
-    public void seed() {
+    @Transactional
+    public void onStartup(@Observes @Initialized(ApplicationScoped.class) Object event) {
         seedBooks();
     }
 
