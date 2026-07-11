@@ -1,20 +1,13 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+context: |
+  Tech stack: Java 21, Jakarta EE 11, Payara Micro 7.2026.5, PrimeFaces 15.0.0, MySQL 9.3
+  Build: Maven (mvnw), WAR packaging, Docker
+  Domain: Media library — catalog and review books, movies, and series with ratings and comments
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  Conventions:
+    - Prefer PrimeFaces components whenever possible (use p: tags instead of raw HTML)
+    - Use Bootstrap utility classes for layout adjustments only when PrimeFaces layout components are insufficient
+    - Model classes use Lombok (@Getter, @Setter, @Data) instead of manual accessors
+    - Keep it simple — prioritize maintainability and fast delivery over over-engineering
+    - Verify changes with: ./mvnw -q -DskipTests compile
