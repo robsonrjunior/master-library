@@ -51,6 +51,6 @@ public class UserLazyDataModel extends LazyDataModel<UserListItem> {
             .stream()
             .filter(item -> id.equals(item.id()))
             .findFirst()
-            .orElseGet(() -> new UserListItem(id, null, null, null));
+            .orElseGet(() -> new UserListItem(id, null, null, null, null, null));
     }
 }

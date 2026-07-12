@@ -32,7 +32,9 @@ public class UserRepository {
                 root.get("id"),
                 root.get("username"),
                 root.get("email"),
-                root.get("displayName")
+                root.get("displayName"),
+                root.get("role"),
+                root.get("createdAt")
             );
         }
 

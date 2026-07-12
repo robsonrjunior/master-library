@@ -8,7 +8,7 @@
         <jta-data-source>java:app/MasterLibrary/MasterLibraryDataSource</jta-data-source>
         <properties>
             <property name="jakarta.persistence.schema-generation.database.action"
-                value="create" />
+                value="drop-and-create" />
         </properties>
     </persistence-unit>
 </persistence>

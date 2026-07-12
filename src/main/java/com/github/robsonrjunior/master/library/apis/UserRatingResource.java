@@ -4,6 +4,7 @@ import com.github.robsonrjunior.master.library.dto.RatingRequest;
 import com.github.robsonrjunior.master.library.dto.RatingUpdateRequest;
 import com.github.robsonrjunior.master.library.model.UserRating;
 import com.github.robsonrjunior.master.library.service.UserRatingService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ import java.util.List;
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed("ADMIN")
 public class UserRatingResource {
 
     @Inject

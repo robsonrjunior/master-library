@@ -8,6 +8,7 @@ import com.github.robsonrjunior.master.library.repository.MediaItemRepository;
 import com.github.robsonrjunior.master.library.repository.UserRatingRepository;
 import com.github.robsonrjunior.master.library.service.UserRatingService;
 import com.github.robsonrjunior.master.library.service.UserService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.faces.FacesException;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -22,6 +23,7 @@ import java.util.Map;
 
 @Named
 @ViewScoped
+@RolesAllowed("ADMIN")
 public class RatingController implements Serializable {
 
     private static final String CREATE = "create";

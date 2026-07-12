@@ -12,6 +12,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.SortMeta;
 
@@ -37,6 +38,10 @@ public class UserService {
         return repository.findPage(first, pageSize, sortBy, filterBy);
     }
 
+    public Optional<User> findByUsername(String username) {
+        return repository.findByUsername(username);
+    }
+
     public User get(Long id) {
         return repository
             .findById(id)
@@ -46,15 +51,24 @@ public class UserService {
     @Transactional
     public User create(User user) {
         user.setId(null);
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Password is required");
+        }
         checkUnique(user, null);
+        user.setPassword(PasswordHasher.hash(user.getPassword()));
         return repository.save(user);
     }
 
     @Transactional
     public User update(Long id, User user) {
-        get(id);
+        User existing = get(id);
         checkUnique(user, id);
         user.setId(id);
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            user.setPassword(existing.getPassword());
+        } else {
+            user.setPassword(PasswordHasher.hash(user.getPassword()));
+        }
         return repository.save(user);
     }
 

@@ -123,6 +123,46 @@
                                         value="#{userController.user.displayName}"
                                         readonly="#{userController.viewMode}" />
                                 </div>
+                                <ui:fragment rendered="#{userController.createMode}">
+                                    <div class="col-12 col-md-6 mb-1">
+                                        <p:outputLabel for="password" value="Senha" />
+                                        <p:password
+                                            id="password"
+                                            value="#{userController.user.password}"
+                                            required="true"
+                                            feedback="false" />
+                                        <p:message id="passwordMsg" for="password" display="text" />
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-1">
+                                        <p:outputLabel for="role" value="Perfil" />
+                                        <p:selectOneMenu
+                                            id="role"
+                                            value="#{userController.user.role}">
+                                            <f:selectItem itemLabel="Usuario" itemValue="USER" />
+                                            <f:selectItem itemLabel="Administrador" itemValue="ADMIN" />
+                                        </p:selectOneMenu>
+                                        <p:message id="roleMsg" for="role" display="text" />
+                                    </div>
+                                </ui:fragment>
+                                <ui:fragment rendered="#{userController.editMode}">
+                                    <div class="col-12 col-md-6 mb-1">
+                                        <p:outputLabel for="newPassword" value="Nova Senha (deixe em branco para manter)" />
+                                        <p:password
+                                            id="newPassword"
+                                            value="#{userController.newPassword}"
+                                            feedback="false" />
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-1">
+                                        <p:outputLabel for="roleEdit" value="Perfil" />
+                                        <p:selectOneMenu
+                                            id="roleEdit"
+                                            value="#{userController.user.role}">
+                                            <f:selectItem itemLabel="Usuario" itemValue="USER" />
+                                            <f:selectItem itemLabel="Administrador" itemValue="ADMIN" />
+                                        </p:selectOneMenu>
+                                        <p:message id="roleEditMsg" for="roleEdit" display="text" />
+                                    </div>
+                                </ui:fragment>
                             </div>
                         </p:outputPanel>
                     </div>

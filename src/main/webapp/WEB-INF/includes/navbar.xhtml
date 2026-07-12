@@ -31,7 +31,10 @@
                 <p:menuitem value="Filmes" icon="pi pi-fw pi-video" outcome="movie-list" />
                 <p:menuitem value="Series" icon="pi pi-fw pi-desktop" outcome="series-list" />
             </p:submenu>
-            <p:submenu label="Administracao" icon="pi pi-fw pi-cog">
+            <p:submenu label="Avaliacoes" icon="pi pi-fw pi-star">
+                <p:menuitem value="Minhas Avaliacoes" icon="pi pi-fw pi-star" outcome="rating-list" />
+            </p:submenu>
+            <p:submenu label="Administracao" icon="pi pi-fw pi-cog" rendered="#{currentUser.admin}">
                 <p:menuitem value="Usuarios" icon="pi pi-fw pi-users" outcome="user-list" />
                 <p:menuitem value="Avaliacoes" icon="pi pi-fw pi-star" outcome="rating-list" />
             </p:submenu>

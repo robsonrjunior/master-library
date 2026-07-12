@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:p="primefaces">
+    <h:head>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+            crossorigin="anonymous" />
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"></script>
+    </h:head>
+
+    <h:body styleClass="vw-100 vh-100 d-flex flex-column align-items-center justify-content-center bg-light">
+        <div class="flex-grow-1 d-flex align-items-center justify-content-center w-100">
+            <h:form>
+                <p:card style="width: 400px">
+                    <f:facet name="title">
+                        <div class="text-center">
+                            <p:graphicImage name="images/master-library.png" library="showcase" width="48" />
+                            <h4 class="mt-2">Master Library</h4>
+                        </div>
+                    </f:facet>
+
+                    <div class="d-flex flex-column gap-3">
+                        <p:messages id="globalMsgs" showDetail="true" display="text" />
+
+                        <div>
+                            <p:outputLabel for="username" value="Username" />
+                            <p:inputText
+                                id="username"
+                                value="#{loginController.username}"
+                                required="true"
+                                placeholder="Username"
+                                styleClass="w-100" />
+                        </div>
+
+                        <div>
+                            <p:outputLabel for="password" value="Senha" />
+                            <p:password
+                                id="password"
+                                value="#{loginController.password}"
+                                required="true"
+                                placeholder="Senha"
+                                feedback="false"
+                                styleClass="w-100" />
+                        </div>
+
+                        <p:commandButton
+                            value="Entrar"
+                            icon="pi pi-sign-in"
+                            action="#{loginController.login}"
+                            styleClass="w-100"
+                            ajax="false" />
+                    </div>
+                </p:card>
+            </h:form>
+        </div>
+
+        <footer class="text-center py-3 mt-auto w-100">
+            <small class="text-muted">Master Library &#169; 2025</small>
+        </footer>
+    </h:body>
+</html>

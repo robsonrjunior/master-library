@@ -2,6 +2,7 @@ package com.github.robsonrjunior.master.library.apis;
 
 import com.github.robsonrjunior.master.library.model.User;
 import com.github.robsonrjunior.master.library.service.UserService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequestScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed("ADMIN")
 public class UserResource {
 
     @Inject

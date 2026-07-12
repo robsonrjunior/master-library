@@ -4,6 +4,7 @@ import com.github.robsonrjunior.master.library.exception.DuplicateResourceExcept
 import com.github.robsonrjunior.master.library.exception.ResourceNotFoundException;
 import com.github.robsonrjunior.master.library.model.User;
 import com.github.robsonrjunior.master.library.service.UserService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.faces.FacesException;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 @Named
 @ViewScoped
+@RolesAllowed("ADMIN")
 public class UserController implements Serializable {
 
     private static final String CREATE = "create";
@@ -28,6 +30,7 @@ public class UserController implements Serializable {
     private Long id;
     private String mode;
     private User user = new User();
+    private String newPassword;
 
     public void loadForm() {
         FacesContext context = FacesContext.getCurrentInstance();
@@ -35,6 +38,7 @@ public class UserController implements Serializable {
             return;
         }
         readViewParameters(context);
+        newPassword = null;
         if (CREATE.equals(mode) || id == null) {
             mode = CREATE;
             user = new User();
@@ -69,6 +73,9 @@ public class UserController implements Serializable {
     public String save() {
         boolean creating = user.getId() == null;
         try {
+            if (!creating) {
+                user.setPassword(newPassword);
+            }
             if (creating) {
                 userService.create(user);
             } else {
@@ -78,6 +85,12 @@ public class UserController implements Serializable {
             FacesContext.getCurrentInstance().addMessage(
                 null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro de duplicidade", e.getMessage())
+            );
+            return null;
+        } catch (IllegalArgumentException e) {
+            FacesContext.getCurrentInstance().addMessage(
+                null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro de validacao", e.getMessage())
             );
             return null;
         }
@@ -154,5 +167,13 @@ public class UserController implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 }

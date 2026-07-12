@@ -10,7 +10,7 @@ Built with **Jakarta EE 11** on **Payara Micro**, using Java 21.
 
 - [Java SE 21+](https://adoptium.net)
 - [Maven Wrapper](https://maven.apache.org/wrapper/) (already included — no Maven install needed)
-- [Docker](https://docs.docker.com/get-docker/) *(optional, for container-based run)*
+- [Docker](https://docs.docker.com/get-docker/) _(optional, for container-based run)_
 
 ## Development Notes
 
@@ -19,6 +19,7 @@ Built with **Jakarta EE 11** on **Payara Micro**, using Java 21.
 - Verify local changes with `./mvnw -q -DskipTests compile`.
 
 > First time only: make the Maven Wrapper executable.
+>
 > ```bash
 > chmod +x mvnw
 > ```
@@ -66,4 +67,10 @@ Start the application in development mode with automatic reload on code changes:
 ```bash
 export $(grep -v '^#' .env | xargs)
 ./mvnw package payara-micro:dev
+```
+
+### Remove current process
+
+```bash
+sudo fuser -k 8080/tcp
 ```

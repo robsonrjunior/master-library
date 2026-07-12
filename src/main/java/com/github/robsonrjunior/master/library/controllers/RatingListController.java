@@ -4,6 +4,7 @@ import com.github.robsonrjunior.master.library.dto.RatingListItem;
 import com.github.robsonrjunior.master.library.service.UserRatingService;
 import com.github.robsonrjunior.master.library.views.RatingLazyDataModel;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Named
 @ViewScoped
+@RolesAllowed("ADMIN")
 public class RatingListController implements Serializable {
 
     @Inject
