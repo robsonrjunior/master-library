@@ -22,7 +22,13 @@
 
     <h:body styleClass="vw-100 vh-100 p-3 d-flex flex-column">
         <div class="card w-100 h-100 overflow-hidden d-flex flex-column">
-            <ui:include src="/WEB-INF/includes/shell.xhtml" />
+            <ui:fragment rendered="#{not empty request.remoteUser}">
+                <ui:include src="/WEB-INF/includes/shell.xhtml" />
+            </ui:fragment>
+
+            <ui:fragment rendered="#{empty request.remoteUser}">
+                <ui:include src="/WEB-INF/includes/login.xhtml" />
+            </ui:fragment>
 
             <ui:include src="/WEB-INF/includes/footer.xhtml" />
         </div>
