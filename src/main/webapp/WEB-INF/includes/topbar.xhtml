@@ -7,10 +7,10 @@
     <p:megaMenu
         orientation="horizontal"
         autoDisplay="false"
-        styleClass="rounded-bottom-0 border-top-0 border-start-0 border-end-0">
+        styleClass="border-noround-bottom border-top-none border-left-none border-right-none">
         <f:facet name="start">
-            <div class="d-flex align-items-center h-100">
-                <p:graphicImage name="images/master-library.png" library="showcase" width="32" />
+            <div class="flex align-items-center h-full">
+                <p:graphicImage name="images/master-library.png" width="32" />
             </div>
         </f:facet>
         <p:submenu label="Vídeos" icon="pi pi-fw pi-video">
@@ -120,14 +120,14 @@
         </p:submenu>
 
         <f:facet name="end">
-            <div class="d-flex align-items-center gap-3">
+            <div class="flex align-items-center gap-3">
                 <div class="ui-input-icon-left">
                     <i class="pi pi-fw pi-search" />
                     <p:inputText placeholder="Pesquisar" />
                 </div>
 
-                <div class="d-flex align-items-center px-3 py-1 border-bottom bg-light small">
-                    <span class="text-muted me-3">
+                <div class="flex align-items-center px-3 py-1 border-bottom-1 surface-border surface-100 text-sm">
+                    <span class="text-color-secondary mr-3">
                         <i class="pi pi-fw pi-user" />
                         #{currentUser.user.displayName ne null ? currentUser.user.displayName : currentUser.username}
                     </span>

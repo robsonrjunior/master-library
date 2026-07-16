@@ -4,17 +4,17 @@
     xmlns:f="jakarta.faces.core"
     xmlns:p="primefaces"
     xmlns:ui="jakarta.faces.facelets">
-    <div class="flex-grow-1 d-flex align-items-center justify-content-center w-100 bg-light">
+    <div class="flex-grow-1 flex align-items-center justify-content-center w-full surface-100">
         <h:form>
             <p:card style="width: 400px">
                 <f:facet name="title">
                     <div class="text-center">
-                        <p:graphicImage name="images/master-library.png" library="showcase" width="48" />
+                        <p:graphicImage name="images/master-library.png" width="48" />
                         <h4 class="mt-2">Master Library</h4>
                     </div>
                 </f:facet>
 
-                <div class="d-flex flex-column gap-3">
+                <div class="flex flex-column gap-3">
                     <p:messages id="globalMsgs" showDetail="true" display="text" />
 
                     <div>
@@ -24,7 +24,7 @@
                             value="#{loginController.username}"
                             required="true"
                             placeholder="Username"
-                            styleClass="w-100" />
+                            styleClass="w-full" />
                     </div>
 
                     <div>
@@ -35,14 +35,14 @@
                             required="true"
                             placeholder="Senha"
                             feedback="false"
-                            styleClass="w-100" />
+                            styleClass="w-full" />
                     </div>
 
                     <p:commandButton
                         value="Entrar"
                         icon="pi pi-sign-in"
                         action="#{loginController.login}"
-                        styleClass="w-100"
+                        styleClass="w-full"
                         ajax="false" />
                 </div>
             </p:card>

@@ -7,11 +7,11 @@ Provides reusable Facelets composition components (topbar, navbar, footer, shell
 ## Requirements
 
 ### Requirement: Layout components
-The system SHALL provide reusable Facelets composition components in `WEB-INF/includes/`: `topbar.xhtml`, `navbar.xhtml`, `footer.xhtml`, and `shell.xhtml`. The shell component SHALL compose the topbar, navbar, and a content insertion point into a single structural unit.
+The system SHALL provide reusable Facelets composition components in `WEB-INF/includes/`: `topbar.xhtml`, `navbar.xhtml`, `footer.xhtml`, and `shell.xhtml`. The shell component SHALL compose the topbar, navbar, and a content insertion point into a single structural unit. All utility styling in these components SHALL use PrimeFlex classes (no Bootstrap class names).
 
 #### Scenario: Topbar renders a horizontal mega menu
 - **WHEN** the `topbar.xhtml` component is included
-- **THEN** it renders a horizontal `p:megaMenu` with the PrimeFaces logo on the left and a search input on the right, matching the current top bar appearance
+- **THEN** it renders a horizontal `p:megaMenu` with the PrimeFaces logo on the left and a search input on the right, using PrimeFlex flex/spacing utilities (e.g., `flex align-items-center`, `mr-3`, `surface-100`, `text-color-secondary`) for its layout, matching the current top bar appearance
 
 #### Scenario: Navbar renders a vertical mega menu with entity links
 - **WHEN** the `navbar.xhtml` component is included
@@ -19,22 +19,26 @@ The system SHALL provide reusable Facelets composition components in `WEB-INF/in
 
 #### Scenario: Footer renders at the bottom
 - **WHEN** the `footer.xhtml` component is included
-- **THEN** it renders a footer element with copyright or project attribution text
+- **THEN** it renders a footer element with copyright or project attribution text, styled with PrimeFlex utilities (`text-center`, `py-3`, `border-top-1 surface-border`, `mt-auto`, `text-color-secondary`)
 
 #### Scenario: Shell composes topbar, navbar, and content
 - **WHEN** the `shell.xhtml` component is rendered
-- **THEN** it includes `topbar.xhtml` at the top, `navbar.xhtml` on the side, and a `<ui:insert name="content">` slot for page-specific content in the main area, all within a full-height card container
+- **THEN** it includes `topbar.xhtml` at the top, `navbar.xhtml` on the side, and a `<ui:insert name="content">` slot for page-specific content in the main area, all within a full-height flex container built with PrimeFlex classes (`h-full flex flex-column`, `flex-grow-1 flex overflow-hidden`, `flex-shrink-0`)
 
 ### Requirement: Master layout template
-The system SHALL provide a master Facelets template (`layout.xhtml`) in `WEB-INF/templates/` that uses `shell.xhtml` for the top portion and `footer.xhtml` for the bottom.
+The system SHALL provide a master Facelets template (`layout.xhtml`) in `WEB-INF/templates/` that uses `shell.xhtml` for the top portion and `footer.xhtml` for the bottom. The template SHALL load only locally-served stylesheets (PrimeFlex via `<h:outputStylesheet>`) and MUST NOT reference external CDN assets.
 
 #### Scenario: Layout wraps content with shell and footer
 - **WHEN** a page uses `layout.xhtml` as its template
-- **THEN** the page's content is rendered inside the shell (with topbar and navbar around it), and the footer appears at the bottom of the viewport
+- **THEN** the page's content is rendered inside the shell (with topbar and navbar around it), and the footer appears at the bottom of the viewport, with the viewport-filling wrapper expressed in PrimeFlex classes (`w-screen h-screen p-3 flex flex-column` on the body and a `surface-card border-1 surface-border border-round w-full h-full overflow-hidden flex flex-column` wrapper)
 
 #### Scenario: Page defines content via ui:define
 - **WHEN** a page declares `<ui:define name="content">` with custom content
 - **THEN** that content is inserted into the shell's content slot, maintaining the surrounding topbar and navbar
+
+#### Scenario: No external CDN assets
+- **WHEN** `layout.xhtml` is inspected
+- **THEN** it contains no Bootstrap `<link>`/`<script>` tags and no references to external CDNs
 
 ### Requirement: Functional navigation menu
 The system SHALL replace all placeholder menu items in the vertical navbar with links to real entity CRUD pages. The horizontal top bar SHALL remain visually unchanged (no links added to it).

@@ -36,11 +36,11 @@
                 font-size: smaller;
             }
         </style>
-        <div class="h-100 w-100 d-flex flex-column">
+        <div class="h-full w-full flex flex-column">
             <h:form id="movieForm" style="display: flex; flex-direction: column; flex: 1; min-height: 0">
                 <p:growl id="messages" showDetail="true" />
                 <p:toolbar>
-                    <p:toolbarGroup align="left" styleClass="border-0">
+                    <p:toolbarGroup align="left" styleClass="border-none">
                         <i class="pi pi-fw pi-video" />
                         <span style="font-weight: bold">
                             <h:outputText rendered="#{empty movieController.movie.title}" value="Filmes - Novo filme" />
@@ -50,7 +50,7 @@
                                 value="Filmes - #{movieController.movie.title}" />
                         </span>
                     </p:toolbarGroup>
-                    <p:toolbarGroup align="right" styleClass="border-0">
+                    <p:toolbarGroup align="right" styleClass="border-none">
                         <p:outputPanel rendered="#{not movieController.viewMode}" styleClass="movie-actions">
                             <p:commandButton
                                 value="Salvar"
@@ -77,14 +77,14 @@
                     </p:toolbarGroup>
                 </p:toolbar>
 
-                <p:scrollPanel mode="native" styleClass="w-100 p-0 m-0 rounded-0 border-0 flex-grow-1">
+                <p:scrollPanel mode="native" styleClass="w-full p-0 m-0 border-noround border-none flex-grow-1">
                     <div class="m-3">
                         <f:facet name="title">
                             <h:outputText value="#{movieController.pageTitle}" />
                         </f:facet>
 
                         <p:outputPanel class="ui-fluid">
-                            <div class="row g-3">
+                            <div class="grid">
                                 <ui:fragment rendered="#{not empty movieController.movie.id}">
                                     <div class="col-4 mb-1">
                                         <p:outputLabel for="movieId" value="ID" />
@@ -98,7 +98,7 @@
                                     <div class="col-8 mb-1"></div>
                                 </ui:fragment>
 
-                                <div class="col-12 col-md-6 mb-1">
+                                <div class="col-12 md:col-6 mb-1">
                                     <p:outputLabel for="title" value="Titulo" />
                                     <p:inputText
                                         id="title"
@@ -107,25 +107,25 @@
                                         readonly="#{movieController.viewMode}" />
                                     <p:message id="titleMsg" for="title" display="text" />
                                 </div>
-                                <div class="col-12 col-md-6 mb-1">
+                                <div class="col-12 md:col-6 mb-1">
                                     <p:outputLabel for="director" value="Diretor" />
                                     <p:inputText
                                         id="director"
                                         value="#{movieController.movie.director}"
                                         readonly="#{movieController.viewMode}" />
                                 </div>
-                                <div class="col-12 col-md-6 mb-1">
+                                <div class="col-12 md:col-6 mb-1">
                                     <p:outputLabel for="runtimeMinutes" value="Duracao (min)" />
                                     <p:inputNumber
                                         id="runtimeMinutes"
                                         value="#{movieController.movie.runtimeMinutes}"
                                         readonly="#{movieController.viewMode}" />
                                 </div>
-                                <div class="col-12 col-md-6 mb-1">
+                                <div class="col-12 md:col-6 mb-1">
                                     <p:outputLabel
                                         for="releaseYear"
                                         value="Ano de Lancamento"
-                                        styleClass="d-block mb-1" />
+                                        styleClass="block mb-1" />
                                     <p:inputNumber
                                         id="releaseYear"
                                         value="#{movieController.movie.releaseYear}"
