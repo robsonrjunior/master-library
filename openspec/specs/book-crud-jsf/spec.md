@@ -42,7 +42,7 @@ The system SHALL provide a JSF page (`book-list.xhtml`) that displays books in a
 - **THEN** the system shows a confirmation dialog; upon confirmation, deletes that book via `BookService`, shows a success message, and refreshes the lazy table
 
 ### Requirement: Book form page
-The system SHALL provide a JSF page (`book.xhtml`) that serves as a single form for creating, editing, and viewing a book, selecting its behavior from a `mode` view parameter (`create`, `edit`, `view`). The page SHALL declare its `id` and `mode` view parameters and a view action via a `<f:metadata>` section supplied through the shared template's metadata insertion point.
+The system SHALL provide a JSF page (`book.xhtml`) that serves as a single form for creating, editing, and viewing a book, selecting its behavior from a `mode` view parameter (`create`, `edit`, `view`). The page SHALL declare its `id` and `mode` view parameters and a view action via a `<f:metadata>` section supplied through the shared template's metadata insertion point. The form fields SHALL be laid out using the shared Bootstrap 5 grid (responsive `row`/`col-*` classes) rather than the PrimeFaces grid classes.
 
 #### Scenario: Create mode shows an empty editable form
 - **WHEN** a user opens `book.xhtml?mode=create`
@@ -75,6 +75,10 @@ The system SHALL provide a JSF page (`book.xhtml`) that serves as a single form 
 #### Scenario: Invalid id redirects with an error
 - **WHEN** a user opens `book.xhtml` with an id that does not exist (e.g. `?id=999&mode=edit`)
 - **THEN** the system catches the `ResourceNotFoundException`, stores an error message in Flash Scope, and redirects to `book-list.xhtml` where the message is shown
+
+#### Scenario: Form fields laid out on the Bootstrap grid
+- **WHEN** a user opens `book.xhtml` in any mode
+- **THEN** the form fields are arranged using Bootstrap grid rows and columns, with page count and published year sharing a row on wide viewports and stacking on narrow viewports
 
 ### Requirement: Book list controller
 The system SHALL provide a CDI-managed backing bean (`BookListController`) annotated with `@Named` and `@ViewScoped` in the `controllers` package, responsible only for listing, pagination, filtering, and delete. It SHALL expose a `LazyDataModel` for the DataTable and hold the current selection for bulk delete.
