@@ -13,7 +13,7 @@
         <h:outputStylesheet name="css/primeflex.min.css" />
     </h:head>
 
-    <h:body styleClass="w-screen h-screen p-3 flex flex-column">
+    <h:body styleClass="w-screen h-screen p-3 flex flex-column bg-gray-900">
         <div class="surface-card border-1 surface-border border-round w-full h-full overflow-hidden flex flex-column">
             <ui:fragment rendered="#{not empty request.remoteUser}">
                 <ui:include src="/WEB-INF/includes/shell.xhtml" />

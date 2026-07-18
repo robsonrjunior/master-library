@@ -1,14 +1,14 @@
 package com.github.robsonrjunior.master.library.configs;
 
 import com.github.robsonrjunior.master.library.model.Book;
-import com.github.robsonrjunior.master.library.model.DatabaseConfig;
+import com.github.robsonrjunior.master.library.model.SeederExecution;
 import com.github.robsonrjunior.master.library.model.Movie;
 import com.github.robsonrjunior.master.library.model.Role;
 import com.github.robsonrjunior.master.library.model.Series;
 import com.github.robsonrjunior.master.library.model.SeriesStatus;
 import com.github.robsonrjunior.master.library.model.User;
 import com.github.robsonrjunior.master.library.model.UserRating;
-import com.github.robsonrjunior.master.library.repository.DatabaseConfigRepository;
+import com.github.robsonrjunior.master.library.repository.SeederExecutionRepository;
 import com.github.robsonrjunior.master.library.repository.MediaItemRepository;
 import com.github.robsonrjunior.master.library.repository.UserRatingRepository;
 import com.github.robsonrjunior.master.library.repository.UserRepository;
@@ -22,6 +22,7 @@ import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -49,12 +50,11 @@ public class DatabaseSeeder {
     private UserRatingRepository ratingRepository;
 
     @Inject
-    private DatabaseConfigRepository configRepository;
+    private SeederExecutionRepository configRepository;
 
     @Transactional
     public void onStartup(@Observes @Initialized(ApplicationScoped.class) Object event) {
-        DatabaseConfig config = configRepository.get();
-        if (config.isSeeded()) {
+        if (configRepository.findByName("master-library-initial").isPresent()) {
             LOG.info("Seed: database already seeded, skipping");
             return;
         }
@@ -64,8 +64,10 @@ public class DatabaseSeeder {
         seedAdmin();
         seedUsers();
         seedRatings();
-        config.setSeeded(true);
-        configRepository.save(config);
+        SeederExecution execution = new SeederExecution();
+        execution.setName("master-library-initial");
+        execution.setSeededAt(LocalDateTime.now());
+        configRepository.save(execution);
         LOG.info("Seed: database seeding completed");
     }
 

@@ -10,6 +10,7 @@ Built with **Jakarta EE 11** on **Payara Micro**, using Java 21.
 
 - [Java SE 21+](https://adoptium.net)
 - [Maven Wrapper](https://maven.apache.org/wrapper/) (already included — no Maven install needed)
+- [GNU Make](https://www.gnu.org/software/make/)
 - [Docker](https://docs.docker.com/get-docker/) _(optional, for container-based run)_
 
 ## Development Notes
@@ -28,32 +29,14 @@ Built with **Jakarta EE 11** on **Payara Micro**, using Java 21.
 
 ## Running the Project
 
+> Environment variables from `.env` are loaded automatically by the Makefile.
+
 ### Standard
 
-Load environment variables and start the application:
+Start the application:
 
 ```bash
-export $(grep -v '^#' .env | xargs)
-./mvnw clean package payara-micro:start
-```
-
-Access the application at [http://localhost:8080/master-library](http://localhost:8080/master-library).
-
----
-
-### Docker
-
-Build the image:
-
-```bash
-./mvnw clean package
-docker build -t master-library:v1 .
-```
-
-Run the container:
-
-```bash
-docker run -it --rm --env-file .env -p 8080:8080 master-library:v1
+make start
 ```
 
 Access the application at [http://localhost:8080/master-library](http://localhost:8080/master-library).
@@ -65,12 +48,47 @@ Access the application at [http://localhost:8080/master-library](http://localhos
 Start the application in development mode with automatic reload on code changes:
 
 ```bash
-export $(grep -v '^#' .env | xargs)
-./mvnw package payara-micro:dev
+make dev
 ```
 
-### Remove current process
+### Stop Payara server
+
+```bash
+make stop
+```
+
+### Force stop Payara server
 
 ```bash
 sudo fuser -k 8080/tcp
 ```
+
+---
+
+### Other Commands
+
+```bash
+make build    # package the application
+make package  # clean and package
+make test     # run tests
+make clean    # remove build artifacts
+```
+
+---
+
+### Docker
+
+Build the image:
+
+```bash
+make package
+docker build -t master-library:v1 .
+```
+
+Run the container:
+
+```bash
+docker run -it --rm --env-file .env -p 8080:8080 master-library:v1
+```
+
+Access the application at [http://localhost:8080/master-library](http://localhost:8080/master-library).
